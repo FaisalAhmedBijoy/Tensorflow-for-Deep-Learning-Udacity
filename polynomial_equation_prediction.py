@@ -19,8 +19,8 @@ def polynomial(x):
 x_train = np.array([i for i in range(101)])
 y_train = np.array([polynomial(i) for i in x_train])
 #y_train = np.array([5*i**2 + 7*i + 9 for i in x_train])
-print(x_train)
-print(y_train)
+x_train=x_train/np.max(x_train)
+y_train=y_train/np.max(y_train)
 plt.scatter(x_train, y_train)
 plt.show()
 
@@ -33,15 +33,17 @@ model.add(tf.keras.layers.Activation('relu'))
 
 model.add(tf.keras.layers.Dense(units=100))
 model.add(tf.keras.layers.Activation('relu'))
-model.add(tf.keras.layers.Dense(units=1))
+model.add(tf.keras.layers.Dense(units=1,activation='sigmoid'))
 
 
 
-model.compile(optimizer='sgd',loss='mean_squared_error',metrics=['accuracy'])
+model.compile(optimizer='adam',loss='mean_squared_error',metrics=['accuracy'])
 model.summary()
 history=model.fit(x_train,y_train,epochs=500,batch_size=32,validation_data=( x_test,y_test))
-plt.plot(history.history['loss'])
-plt.plot(history.history['accuracy'])
+plt.plot(history.history['loss'],label='loss')
+plt.show()
+
+plt.plot(history.history['accuracy'],label='accuracy')
 plt.show()
 
 results=model.evaluate(x_train,y_train)
